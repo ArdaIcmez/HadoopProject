@@ -14,24 +14,28 @@ import org.apache.hadoop.mapreduce.Reducer;
  * 
  * @author Raman
  */
-public class ReduceClass extends Reducer<Text, IntWritable, Text, IntWritable>{
+public class ReduceClass extends Reducer<IntWritable, IntWritable, IntWritable, IntWritable>{
 
 	/**
 	 * Method which performs the reduce operation and sums 
 	 * all the occurrences of the word before passing it to be stored in output
 	 */
+
 	@Override
-	protected void reduce(Text key, Iterable<IntWritable> values,
+	protected void reduce(IntWritable key, Iterable<IntWritable> values,
 			Context context)
 			throws IOException, InterruptedException {
 	
 		int sum = 0;
+		int counter = 0;
 		Iterator<IntWritable> valuesIt = values.iterator();
 		
 		while(valuesIt.hasNext()){
 			sum = sum + valuesIt.next().get();
+			counter++;
 		}
-		
+		sum=sum/counter;
+
 		context.write(key, new IntWritable(sum));
 	}	
 }
