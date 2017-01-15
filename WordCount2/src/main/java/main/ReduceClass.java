@@ -14,7 +14,7 @@ import org.apache.hadoop.mapreduce.Reducer;
  * 
  * @author Raman
  */
-public class ReduceClass extends Reducer<IntWritable, IntWritable, IntWritable, IntWritable>{
+public class ReduceClass extends Reducer<Text, IntWritable, Text, IntWritable>{
 
 	/**
 	 * Method which performs the reduce operation and sums 
@@ -22,7 +22,7 @@ public class ReduceClass extends Reducer<IntWritable, IntWritable, IntWritable, 
 	 */
 
 	@Override
-	protected void reduce(IntWritable key, Iterable<IntWritable> values,
+	protected void reduce(Text key, Iterable<IntWritable> values,
 			Context context)
 			throws IOException, InterruptedException {
 	
@@ -36,6 +36,6 @@ public class ReduceClass extends Reducer<IntWritable, IntWritable, IntWritable, 
 		}
 		sum=sum/counter;
 
-		context.write(key, new IntWritable(sum));
+		context.write(new Text(StationConverter.getStation(key.toString())), new IntWritable(sum));
 	}	
 }

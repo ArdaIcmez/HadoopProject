@@ -17,11 +17,11 @@ import org.apache.hadoop.mapreduce.Mapper;
  * by reduce class
  * @author Raman
  */
-public class MapClass extends Mapper<LongWritable, Text, IntWritable, IntWritable>{
+public class MapClass extends Mapper<LongWritable, Text, Text, IntWritable>{
 	private static final Pattern REGEX_TEMP = Pattern.compile("^([0-9]+);[^;]*;[^;]*;[^;]*;[^;]*;.[^;]*;.[^;]*;([0-9]+)");
 	private final static IntWritable one = new IntWritable(1);
 
-	private IntWritable station = new IntWritable();
+	private Text station = new Text();
 	private IntWritable temperature = new IntWritable();
     
     /**
@@ -48,7 +48,7 @@ public class MapClass extends Mapper<LongWritable, Text, IntWritable, IntWritabl
 		Matcher m = REGEX_TEMP.matcher(line);
 
 		if (m.find()) {
-			station.set(Integer.parseInt(m.group(1)));
+			station.set(m.group(1));
 			temperature.set(Integer.parseInt(m.group(2))-273);
 			context.write(station,temperature);
 		}

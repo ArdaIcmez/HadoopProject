@@ -42,17 +42,13 @@ public class WordCount extends Configured implements Tool{
 	 * @param args Arguments passed in main function
 	 */
 	public int run(String[] args) throws Exception {
-		if (args.length != 3) {
-			System.err.printf("Usage: %s needs 3 arguments <station> <input> <output> files\n",
+		if (args.length != 2) {
+			System.err.printf("Usage: %s needs 2 arguments <input> <output> files\n",
 					getClass().getSimpleName());
 			return -1;
 		}
 
-		/**Path pt=new Path("hdfs://pathTofile");
-		FileSystem fs = FileSystem.get(new Configuration());
-		BufferedReader br=new BufferedReader(new InputStreamReader(fs.open(pt)));
-		StationConverter.prepareStations(br);
-		 **/
+		StationConverter.prepareStations("postesSynop.csv");
 	
 		//Initialize the Hadoop job and set the jar as well as the name of the Job
 		Job job = new Job();
@@ -60,8 +56,8 @@ public class WordCount extends Configured implements Tool{
 		job.setJobName("WordCounter");
 		
 		//Add input and output file paths to job based on the arguments passed
-		FileInputFormat.addInputPath(job, new Path(args[1]));
-		FileOutputFormat.setOutputPath(job, new Path(args[2]));
+		FileInputFormat.addInputPath(job, new Path(args[0]));
+		FileOutputFormat.setOutputPath(job, new Path(args[1]));
 	
 		job.setOutputKeyClass(Text.class);
 		job.setOutputValueClass(IntWritable.class);

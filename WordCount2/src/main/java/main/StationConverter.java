@@ -1,7 +1,6 @@
 package main;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
+import java.io.*;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -12,30 +11,31 @@ import java.util.regex.Pattern;
  */
 public class StationConverter {
     private static final Pattern REGEX_STATION = Pattern.compile("^([0-9]+);([^;]*);");
-    private static Map<Integer,String> weatherStations = new HashMap<>();
+    private static Map<String,String> weatherStations = new HashMap<>();
 
-    public static void prepareStations(FileReader file){
+    public static void prepareStations(String postesName){
+        InputStream inputStream = StationConverter.class.getClassLoader()
+                .getResourceAsStream(postesName);
+        BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+        String line;
         try {
-            BufferedReader br = new BufferedReader(file);
-            String line;
-            br.readLine();
-            while ((line = br.readLine()) != null) {
+            reader.readLine();
+            while((line = reader.readLine()) != null) {
                 fillStations(line);
             }
-            br.close();
-        }
-        catch (Exception e){
-            System.out.println("error Station parsing");
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
+
     private static void fillStations(String toParse){
         Matcher m = REGEX_STATION.matcher(toParse);
         if (m.find()) {
-            weatherStations.put(Integer.parseInt(m.group(1)),m.group(2));
+            weatherStations.put(m.group(1),m.group(2));
         }
     }
 
-    public static String getStation(int idStation){
+    public static String getStation(String idStation){
         return weatherStations.get(idStation);
     }
 }
